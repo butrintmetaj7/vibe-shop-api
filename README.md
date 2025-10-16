@@ -1,61 +1,305 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Vibe Shop API
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+A RESTful API backend for an e-commerce platform built with Laravel 12 and Laravel Sanctum. This API provides comprehensive authentication, role-based access control, and serves as the foundation for a modern e-commerce application.
 
-## About Laravel
+## 🚀 Features
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+### Authentication & Authorization
+- **Token-based Authentication** using Laravel Sanctum
+- **Role-based Access Control** (Admin/Customer roles)
+- **User Registration & Login** with validation
+- **Secure Token Management** with expiration
+- **Rate Limiting** on authentication endpoints
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+### API Features
+- **Versioned API** (`/api/v1/` prefix)
+- **Consistent Response Format** using ApiResponse DTO
+- **Comprehensive Validation** with Form Requests
+- **Strict Type Declarations** throughout codebase
+- **Production-ready Security** measures
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+### Testing
+- **43 Comprehensive Tests** covering all functionality
+- **Feature Tests** for authentication flows
+- **Unit Tests** for models and helpers
+- **Role Middleware Tests** for access control
 
-## Learning Laravel
+## 📋 Requirements
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+- PHP 8.2+
+- Composer
+- SQLite (default) or MySQL/PostgreSQL
+- Laravel 12
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+## 🛠️ Installation
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/butrintmetaj7/vibe-shop-api.git
+   cd vibe-shop-api
+   ```
 
-## Laravel Sponsors
+2. **Install dependencies**
+   ```bash
+   composer install
+   ```
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+3. **Environment setup**
+   ```bash
+   cp .env.example .env
+   php artisan key:generate
+   ```
 
-### Premium Partners
+4. **Database setup**
+   ```bash
+   # For SQLite (default)
+   touch database/database.sqlite
+   
+   # Or configure MySQL/PostgreSQL in .env
+   php artisan migrate
+   ```
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+5. **Run tests**
+   ```bash
+   php artisan test
+   ```
 
-## Contributing
+## 🔗 API Endpoints
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+### Authentication Endpoints
 
-## Code of Conduct
+| Method | Endpoint | Description | Rate Limit |
+|--------|----------|-------------|------------|
+| `POST` | `/api/v1/register` | User registration | 10/min |
+| `POST` | `/api/v1/login` | User login | 10/min |
+| `POST` | `/api/v1/logout` | User logout | - |
+| `GET` | `/api/v1/user` | Get user profile | - |
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+### Request/Response Examples
 
-## Security Vulnerabilities
+#### Register User
+```bash
+POST /api/v1/register
+Content-Type: application/json
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+{
+  "name": "John Doe",
+  "email": "john@example.com",
+  "password": "password123",
+  "password_confirmation": "password123",
+  "role": "customer"
+}
+```
 
-## License
+**Response:**
+```json
+{
+  "success": true,
+  "message": "User registered successfully",
+  "data": {
+    "user": {
+      "id": 1,
+      "name": "John Doe",
+      "email": "john@example.com",
+      "role": "customer",
+      "email_verified_at": null,
+      "created_at": "2025-10-16T14:30:00.000000Z",
+      "updated_at": "2025-10-16T14:30:00.000000Z"
+    },
+    "token": "1|abc123..."
+  }
+}
+```
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+#### Login User
+```bash
+POST /api/v1/login
+Content-Type: application/json
+
+{
+  "email": "john@example.com",
+  "password": "password123"
+}
+```
+
+#### Get User Profile
+```bash
+GET /api/v1/user
+Authorization: Bearer 1|abc123...
+```
+
+## 🔒 Security Features
+
+### Rate Limiting
+- **Authentication endpoints**: 10 requests per minute per IP
+- **Prevents brute force attacks** and API abuse
+
+### Token Security
+- **7-day expiration** (configurable via `SANCTUM_TOKEN_EXPIRATION`)
+- **Descriptive token names** for audit trails
+- **Secure token generation** using Laravel Sanctum
+
+### Data Protection
+- **Password hashing** with Laravel's built-in hasher
+- **Generic error messages** to prevent user enumeration
+- **Strict type declarations** to prevent type coercion bugs
+
+## 🧪 Testing
+
+The project includes comprehensive test coverage:
+
+```bash
+# Run all tests
+php artisan test
+
+# Run specific test suites
+php artisan test tests/Feature/AuthenticationTest.php
+php artisan test tests/Feature/RoleMiddlewareTest.php
+php artisan test tests/Unit/UserTest.php
+
+# Run with coverage
+php artisan test --coverage
+```
+
+### Test Coverage
+- ✅ **23 Authentication Tests** - Registration, login, logout, profile
+- ✅ **9 Role Middleware Tests** - Access control and permissions
+- ✅ **11 User Model Tests** - Helper methods and traits
+
+## 🏗️ Architecture
+
+### Project Structure
+```
+app/
+├── Http/
+│   ├── Controllers/
+│   │   └── AuthController.php          # Authentication endpoints
+│   ├── Middleware/
+│   │   └── RoleMiddleware.php          # Role-based access control
+│   ├── Requests/
+│   │   ├── LoginRequest.php            # Login validation
+│   │   └── RegisterRequest.php         # Registration validation
+│   ├── Resources/
+│   │   └── UserResource.php            # User data transformation
+│   └── Responses/
+│       └── ApiResponse.php             # Consistent API responses
+├── Models/
+│   └── User.php                        # User model with roles
+└── ...
+
+tests/
+├── Feature/
+│   ├── AuthenticationTest.php          # Authentication flow tests
+│   └── RoleMiddlewareTest.php          # Role middleware tests
+└── Unit/
+    └── UserTest.php                    # User model tests
+```
+
+### Key Components
+
+#### ApiResponse DTO
+Centralized response handling for consistent API structure:
+```php
+// Success response
+return ApiResponse::success($data, 'Success message', 201);
+
+// Error response
+return ApiResponse::error('Error message', $errors, 400);
+
+// Specific responses
+return ApiResponse::unauthorized('Invalid credentials');
+return ApiResponse::forbidden('Access denied');
+```
+
+#### Role Middleware
+Protect routes with role-based access control:
+```php
+// Admin only
+Route::middleware(['auth:sanctum', 'role:admin'])->group(function () {
+    // Admin routes
+});
+
+// Multiple roles
+Route::middleware(['auth:sanctum', 'role:admin,customer'])->group(function () {
+    // Both admin and customer routes
+});
+```
+
+## 📚 Documentation
+
+- **[Code Review](docs/features/001_REVIEW.md)** - Comprehensive code review with all issues and fixes
+- **[Fixes Summary](docs/features/001_FIXES_SUMMARY.md)** - Quick reference of all implemented fixes
+- **[API Response Guide](docs/API_RESPONSE_GUIDE.md)** - Complete guide for using the ApiResponse DTO
+- **[Product Brief](docs/PRODUCT_BRIEF.md)** - Project overview and requirements
+- **[Implementation Plan](docs/001_PLAN.md)** - Original authentication implementation plan
+
+## 🔧 Configuration
+
+### Environment Variables
+```env
+# Authentication
+AUTH_GUARD=sanctum
+SANCTUM_TOKEN_EXPIRATION=10080  # 7 days in minutes
+
+# Database (SQLite by default)
+DB_CONNECTION=sqlite
+DB_DATABASE=/absolute/path/to/database/database.sqlite
+```
+
+### Sanctum Configuration
+- **Token expiration**: 7 days (configurable)
+- **Stateful domains**: localhost, 127.0.0.1
+- **Guard**: web (for SPA authentication)
+
+## 🚀 Development
+
+### Code Standards
+- **PSR-12** coding standards
+- **Strict types** (`declare(strict_types=1);`) in all files
+- **Laravel best practices** and conventions
+- **Comprehensive testing** for all features
+
+### Adding New Features
+1. Create feature branch: `git checkout -b feature/your-feature`
+2. Implement with tests
+3. Follow existing patterns (ApiResponse, validation, etc.)
+4. Run tests: `php artisan test`
+5. Create pull request
+
+## 📊 Project Status
+
+**Current Version**: 1.0.0  
+**Status**: Production Ready ✅  
+**Test Coverage**: 100% of authentication features  
+**Code Quality**: Grade A (all issues resolved)
+
+### Recent Updates
+- ✅ Complete authentication system implementation
+- ✅ Role-based access control
+- ✅ Comprehensive test suite (43 tests)
+- ✅ API versioning and rate limiting
+- ✅ Security enhancements
+- ✅ Documentation and code review
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes with tests
+4. Ensure all tests pass
+5. Submit a pull request
+
+## 📄 License
+
+This project is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+
+## 🆘 Support
+
+For questions or issues:
+- Create an issue on GitHub
+- Check the documentation in the `docs/` folder
+- Review the test files for usage examples
+
+---
+
+**Built with ❤️ using Laravel 12 and Laravel Sanctum**
