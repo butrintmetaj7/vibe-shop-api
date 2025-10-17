@@ -29,7 +29,7 @@ class UpdateUserRequest extends FormRequest
                 'string',
                 'email',
                 'max:255',
-                Rule::unique('users', 'email')->ignore($this->user),
+                Rule::unique('users', 'email')->ignore($this->route('user')->id ?? null),
             ],
             'password' => ['sometimes', 'string', 'min:8', 'confirmed'],
             'role' => ['sometimes', 'string', 'in:customer,admin'],
