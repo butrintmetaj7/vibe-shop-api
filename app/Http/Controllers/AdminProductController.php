@@ -31,19 +31,12 @@ class AdminProductController extends Controller
     public function index(Request $request)
     {
         $query = $this->queryService->buildQuery($request);
-
-        
         $products = $query->paginate();
 
-        return ApiResponse::success([
-            'products' => AdminProductResource::collection($products->items()),
-            'pagination' => [
-                'current_page' => $products->currentPage(),
-                'per_page' => $products->perPage(),
-                'total' => $products->total(),
-                'last_page' => $products->lastPage(),
-            ],
-        ], 'Products retrieved successfully');
+        return ApiResponse::paginated(
+            $products,
+            AdminProductResource::class
+        );
     }
 
     /**
@@ -66,8 +59,7 @@ class AdminProductController extends Controller
     public function show(Product $product)
     {
         return ApiResponse::success(
-            new AdminProductResource($product),
-            'Product retrieved successfully'
+            new AdminProductResource($product)
         );
     }
 

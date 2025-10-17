@@ -28,31 +28,29 @@ class AdminProductTest extends TestCase
             ->assertJsonStructure([
                 'success',
                 'data' => [
-                    'products' => [
-                        '*' => [
-                            'id',
-                            'external_id',
-                            'title',
-                            'description',
-                            'price',
-                            'category',
-                            'image',
-                            'rating' => ['rate', 'count'],
-                            'created_at',
-                            'updated_at',
-                        ],
+                    '*' => [
+                        'id',
+                        'external_id',
+                        'title',
+                        'description',
+                        'price',
+                        'category',
+                        'image',
+                        'rating' => ['rate', 'count'],
+                        'created_at',
+                        'updated_at',
                     ],
-                    'pagination',
                 ],
+                'pagination',
                 'message',
             ])
             ->assertJson([
                 'success' => true,
-                'message' => 'Products retrieved successfully',
+                'message' => 'Data retrieved successfully',
             ]);
 
         // Verify admin resource includes internal fields
-        $products = $response->json('data.products');
+        $products = $response->json('data');
         $this->assertArrayHasKey('external_id', $products[0]);
         $this->assertArrayHasKey('created_at', $products[0]);
         $this->assertArrayHasKey('updated_at', $products[0]);
@@ -169,7 +167,7 @@ class AdminProductTest extends TestCase
         $response->assertStatus(200)
             ->assertJson([
                 'success' => true,
-                'message' => 'Product retrieved successfully',
+                'message' => 'Success',
                 'data' => [
                     'id' => $product->id,
                     'title' => $product->title,

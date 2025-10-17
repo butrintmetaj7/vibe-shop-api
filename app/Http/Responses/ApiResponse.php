@@ -81,5 +81,28 @@ class ApiResponse
     ): JsonResponse {
         return self::error($message, $errors, 422);
     }
+
+    /**
+     * Return a paginated success response.
+     */
+    public static function paginated(
+        $paginator,
+        string $resourceClass,
+        string $message = 'Data retrieved successfully'
+    ): JsonResponse {
+        $response = [
+            'success' => true,
+            'message' => $message,
+            'data' => $resourceClass::collection($paginator->items()),
+            'pagination' => [
+                'current_page' => $paginator->currentPage(),
+                'per_page' => $paginator->perPage(),
+                'total' => $paginator->total(),
+                'last_page' => $paginator->lastPage(),
+            ],
+        ];
+
+        return response()->json($response, 200);
+    }
 }
 

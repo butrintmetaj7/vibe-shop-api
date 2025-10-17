@@ -24,36 +24,34 @@ class ProductTest extends TestCase
             ->assertJsonStructure([
                 'success',
                 'data' => [
-                    'products' => [
-                        '*' => [
-                            'id',
-                            'title',
-                            'description',
-                            'price',
-                            'category',
-                            'image',
-                            'rating' => [
-                                'rate',
-                                'count',
-                            ],
+                    '*' => [
+                        'id',
+                        'title',
+                        'description',
+                        'price',
+                        'category',
+                        'image',
+                        'rating' => [
+                            'rate',
+                            'count',
                         ],
                     ],
-                    'pagination' => [
-                        'current_page',
-                        'per_page',
-                        'total',
-                        'last_page',
-                    ],
+                ],
+                'pagination' => [
+                    'current_page',
+                    'per_page',
+                    'total',
+                    'last_page',
                 ],
                 'message',
             ])
             ->assertJson([
                 'success' => true,
-                'message' => 'Products retrieved successfully',
+                'message' => 'Data retrieved successfully',
             ]);
 
         // Verify public resource excludes internal fields
-        $products = $response->json('data.products');
+        $products = $response->json('data');
         $this->assertArrayNotHasKey('external_id', $products[0]);
         $this->assertArrayNotHasKey('created_at', $products[0]);
         $this->assertArrayNotHasKey('updated_at', $products[0]);
@@ -87,7 +85,7 @@ class ProductTest extends TestCase
             ])
             ->assertJson([
                 'success' => true,
-                'message' => 'Product retrieved successfully',
+                'message' => 'Success',
                 'data' => [
                     'id' => $product->id,
                     'title' => $product->title,
@@ -116,7 +114,7 @@ class ProductTest extends TestCase
                 'success' => true,
             ]);
 
-        $products = $response->json('data.products');
+        $products = $response->json('data');
         $this->assertCount(2, $products);
 
         foreach ($products as $product) {
@@ -137,7 +135,7 @@ class ProductTest extends TestCase
 
         $response->assertStatus(200);
 
-        $products = $response->json('data.products');
+        $products = $response->json('data');
         $this->assertEquals(30.00, $products[0]['price']);
         $this->assertEquals(40.00, $products[1]['price']);
         $this->assertEquals(50.00, $products[2]['price']);
@@ -156,7 +154,7 @@ class ProductTest extends TestCase
 
         $response->assertStatus(200);
 
-        $products = $response->json('data.products');
+        $products = $response->json('data');
         $this->assertEquals(50.00, $products[0]['price']);
         $this->assertEquals(40.00, $products[1]['price']);
         $this->assertEquals(30.00, $products[2]['price']);
@@ -175,7 +173,7 @@ class ProductTest extends TestCase
 
         $response->assertStatus(200);
 
-        $products = $response->json('data.products');
+        $products = $response->json('data');
         $this->assertEquals($newProduct->id, $products[0]['id']);
         $this->assertEquals($middleProduct->id, $products[1]['id']);
         $this->assertEquals($oldProduct->id, $products[2]['id']);
@@ -194,7 +192,7 @@ class ProductTest extends TestCase
 
         $response->assertStatus(200);
 
-        $products = $response->json('data.products');
+        $products = $response->json('data');
         $this->assertCount(2, $products);
     }
 }
