@@ -2,7 +2,9 @@
 
 namespace App\Http\Requests;
 
+use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Validation\Rule;
 
 class UpdateUserRequest extends FormRequest
@@ -12,7 +14,16 @@ class UpdateUserRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return true; // Authorization handled by middleware
+        $targetUser = $this->route('user');
+        $newRole = $this->input('role');
+
+        $response = Gate::inspect('update', [$targetUser, $newRole]);
+        
+        if ($response->denied()) {
+            throw new AuthorizationException($response->message());
+        }
+
+        return true;
     }
 
     /**

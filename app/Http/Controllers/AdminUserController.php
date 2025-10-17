@@ -54,12 +54,6 @@ class AdminUserController extends Controller
 
     public function update(UpdateUserRequest $request, User $user)
     {
-        $newRole = $request->input('role');
-
-        if (!$request->user()->can('update', [$user, $newRole])) {
-            return ApiResponse::forbidden('You cannot change your own role');
-        }
-
         $user->update($request->validated());
 
         return ApiResponse::success(

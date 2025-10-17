@@ -1,8 +1,11 @@
 <?php
 
+use App\Http\Responses\ApiResponse;
+use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -17,5 +20,11 @@ return Application::configure(basePath: dirname(__DIR__))
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
-        //
+        $exceptions->render(function (AuthorizationException $e) {
+            return ApiResponse::forbidden($e->getMessage() ?: 'Forbidden');
+        });
+        
+        $exceptions->render(function (AccessDeniedHttpException $e) {
+            return ApiResponse::forbidden($e->getMessage() ?: 'Forbidden');
+        });
     })->create();
