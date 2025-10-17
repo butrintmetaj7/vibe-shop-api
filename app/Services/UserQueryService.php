@@ -32,30 +32,20 @@ class UserQueryService
     public function getPaginated(Request $request)
     {
         $query = $this->buildQuery($request);
-        $perPage = max(1, min((int) $request->input('per_page', 15), 100));
+        $perPage = max(1, min($request->integer('per_page', 15), 100));
 
         return $query->paginate($perPage);
     }
 
     protected function applySorting(Builder $query, string $sort): void
     {
-        switch ($sort) {
-            case 'newest':
-                $query->orderBy('created_at', 'desc');
-                break;
-            case 'oldest':
-                $query->orderBy('created_at', 'asc');
-                break;
-            case 'name_asc':
-                $query->orderBy('name', 'asc');
-                break;
-            case 'name_desc':
-                $query->orderBy('name', 'desc');
-                break;
-            default:
-                $query->orderBy('id', 'asc');
-                break;
-        }
+        match ($sort) {
+            'newest' => $query->orderBy('created_at', 'desc'),
+            'oldest' => $query->orderBy('created_at', 'asc'),
+            'name_asc' => $query->orderBy('name', 'asc'),
+            'name_desc' => $query->orderBy('name', 'desc'),
+            default => $query->orderBy('id', 'asc'),
+        };
     }
 }
 

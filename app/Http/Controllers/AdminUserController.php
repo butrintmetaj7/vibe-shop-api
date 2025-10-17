@@ -12,11 +12,12 @@ use Illuminate\Http\Request;
 
 class AdminUserController extends Controller
 {
-    protected $queryService;
-
-    public function __construct(UserQueryService $queryService)
-    {
-        $this->queryService = $queryService;
+    /**
+     * Create a new controller instance.
+     */
+    public function __construct(
+        protected UserQueryService $queryService
+    ) {
     }
 
     public function index(Request $request)
