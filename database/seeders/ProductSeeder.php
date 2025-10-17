@@ -32,16 +32,17 @@ class ProductSeeder extends Seeder
             $count = 0;
 
             foreach ($products as $product) {
+                $rating = is_array($product['rating'] ?? null) ? $product['rating'] : [];
                 Product::updateOrCreate(
-                    ['external_id' => $product['id']],
+                    ['external_id' => $product['id'] ?? null],
                     [
-                        'title' => $product['title'],
-                        'description' => $product['description'],
-                        'price' => $product['price'],
-                        'category' => $product['category'],
+                        'title' => $product['title'] ?? 'Untitled',
+                        'description' => $product['description'] ?? '',
+                        'price' => isset($product['price']) && is_numeric($product['price']) ? $product['price'] : 0,
+                        'category' => $product['category'] ?? 'uncategorized',
                         'image' => $product['image'] ?? null,
-                        'rating_rate' => $product['rating']['rate'] ?? null,
-                        'rating_count' => $product['rating']['count'] ?? null,
+                        'rating_rate' => isset($rating['rate']) && is_numeric($rating['rate']) ? $rating['rate'] : null,
+                        'rating_count' => isset($rating['count']) && is_numeric($rating['count']) ? (int) $rating['count'] : null,
                     ]
                 );
                 $count++;

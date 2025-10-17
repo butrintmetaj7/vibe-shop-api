@@ -26,9 +26,9 @@ class UpdateProductRequest extends FormRequest
             'description' => ['sometimes', 'string'],
             'price' => ['sometimes', 'numeric', 'min:0'],
             'category' => ['sometimes', 'string', 'max:100'],
-            'image' => ['nullable', 'url', 'max:500'],
-            'rating_rate' => ['nullable', 'numeric', 'between:0,5'],
-            'rating_count' => ['nullable', 'integer', 'min:0'],
+            'image' => ['sometimes', 'nullable', 'url', 'max:500'],
+            'rating_rate' => ['sometimes', 'nullable', 'numeric', 'between:0,5'],
+            'rating_count' => ['sometimes', 'nullable', 'integer', 'min:0'],
         ];
     }
 }

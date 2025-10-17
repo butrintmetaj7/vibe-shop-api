@@ -91,7 +91,7 @@ class ApiResponse
     ): JsonResponse {
         $response = [
             'success' => true,
-            'data' => $resourceClass::collection($paginator->items()),
+            'data' => $resourceClass::collection($paginator),
             'pagination' => [
                 'current_page' => $paginator->currentPage(),
                 'per_page' => $paginator->perPage(),
