@@ -28,8 +28,7 @@ class ProductController extends Controller
      */
     public function index(Request $request)
     {
-        $query = $this->queryService->buildQuery($request);
-        $products = $query->paginate();
+        $products = $this->queryService->getPaginated($request);
 
         return ApiResponse::paginated(
             $products,

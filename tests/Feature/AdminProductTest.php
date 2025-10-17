@@ -306,4 +306,136 @@ class AdminProductTest extends TestCase
         $response->assertStatus(422)
             ->assertJsonValidationErrors(['image']);
     }
+
+    /**
+     * Test pagination with custom per_page parameter.
+     */
+    public function test_can_paginate_with_custom_per_page(): void
+    {
+        $admin = User::factory()->create(['role' => 'admin']);
+        Sanctum::actingAs($admin);
+
+        // Create 25 products
+        Product::factory()->count(25)->create();
+
+        // Test with per_page=5
+        $response = $this->getJson('/api/v1/admin/products?per_page=5');
+
+        $response->assertStatus(200)
+            ->assertJson([
+                'success' => true,
+                'pagination' => [
+                    'per_page' => 5,
+                    'total' => 25,
+                    'last_page' => 5,
+                    'current_page' => 1,
+                ],
+            ]);
+
+        $this->assertCount(5, $response->json('data'));
+    }
+
+    /**
+     * Test pagination with default per_page when not specified.
+     */
+    public function test_pagination_uses_default_per_page_when_not_specified(): void
+    {
+        $admin = User::factory()->create(['role' => 'admin']);
+        Sanctum::actingAs($admin);
+
+        // Create 20 products
+        Product::factory()->count(20)->create();
+
+        $response = $this->getJson('/api/v1/admin/products');
+
+        $response->assertStatus(200)
+            ->assertJson([
+                'success' => true,
+                'pagination' => [
+                    'per_page' => 15,
+                    'total' => 20,
+                ],
+            ]);
+
+        $this->assertCount(15, $response->json('data'));
+    }
+
+    /**
+     * Test pagination enforces minimum per_page value.
+     */
+    public function test_pagination_enforces_minimum_per_page(): void
+    {
+        $admin = User::factory()->create(['role' => 'admin']);
+        Sanctum::actingAs($admin);
+
+        Product::factory()->count(10)->create();
+
+        // Try to set per_page to 0 or negative
+        $response = $this->getJson('/api/v1/admin/products?per_page=0');
+
+        $response->assertStatus(200)
+            ->assertJson([
+                'success' => true,
+                'pagination' => [
+                    'per_page' => 1,
+                ],
+            ]);
+    }
+
+    /**
+     * Test pagination enforces maximum per_page value.
+     */
+    public function test_pagination_enforces_maximum_per_page(): void
+    {
+        $admin = User::factory()->create(['role' => 'admin']);
+        Sanctum::actingAs($admin);
+
+        Product::factory()->count(150)->create();
+
+        // Try to set per_page to more than 100
+        $response = $this->getJson('/api/v1/admin/products?per_page=150');
+
+        $response->assertStatus(200)
+            ->assertJson([
+                'success' => true,
+                'pagination' => [
+                    'per_page' => 100,
+                    'current_page' => 1,
+                ],
+            ]);
+
+        $this->assertCount(100, $response->json('data'));
+    }
+
+    /**
+     * Test pagination works with filters and per_page.
+     */
+    public function test_pagination_works_with_filters_and_per_page(): void
+    {
+        $admin = User::factory()->create(['role' => 'admin']);
+        Sanctum::actingAs($admin);
+
+        // Create products with different categories
+        Product::factory()->count(8)->create(['category' => 'electronics']);
+        Product::factory()->count(5)->create(['category' => 'clothing']);
+
+        $response = $this->getJson('/api/v1/admin/products?category=electronics&per_page=3');
+
+        $response->assertStatus(200)
+            ->assertJson([
+                'success' => true,
+                'pagination' => [
+                    'per_page' => 3,
+                    'total' => 8,
+                    'last_page' => 3,
+                ],
+            ]);
+
+        $this->assertCount(3, $response->json('data'));
+
+        // Verify all products are electronics
+        foreach ($response->json('data') as $product) {
+            $this->assertEquals('electronics', $product['category']);
+        }
+    }
 }

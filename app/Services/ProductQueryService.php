@@ -39,6 +39,20 @@ class ProductQueryService
     }
 
     /**
+     * Get paginated products with filters applied.
+     *
+     * @param Request $request
+     * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
+     */
+    public function getPaginated(Request $request)
+    {
+        $query = $this->buildQuery($request);
+        $perPage = max(1, min((int) $request->input('per_page', 15), 100));
+
+        return $query->paginate($perPage);
+    }
+
+    /**
      * Apply sorting to the query.
      *
      * @param Builder $query

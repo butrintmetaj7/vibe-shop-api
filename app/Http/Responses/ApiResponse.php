@@ -87,12 +87,10 @@ class ApiResponse
      */
     public static function paginated(
         $paginator,
-        string $resourceClass,
-        string $message = 'Data retrieved successfully'
+        string $resourceClass
     ): JsonResponse {
         $response = [
             'success' => true,
-            'message' => $message,
             'data' => $resourceClass::collection($paginator->items()),
             'pagination' => [
                 'current_page' => $paginator->currentPage(),
