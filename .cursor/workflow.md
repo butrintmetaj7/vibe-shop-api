@@ -4,8 +4,7 @@
 
 ## New projects:
 - Define a project brief (business) - to reference regardless of feature
-- Embed tech guidance into .cursorrules
-- Use a starter kit (create-next-app, create-volo-app etc)
+- Embed tech guidance into .cursor/rules.d
 
 ## Building features
 - plan_feature command
