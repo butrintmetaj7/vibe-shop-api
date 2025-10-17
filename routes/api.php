@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use App\Http\Controllers\AdminProductController;
+use App\Http\Controllers\AdminUserController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ProductController;
 use Illuminate\Support\Facades\Route;
@@ -37,6 +38,7 @@ Route::prefix('v1')->group(function () {
         // Admin product routes (requires admin role)
         Route::middleware('role:admin')->prefix('admin')->group(function () {
             Route::apiResource('/products', AdminProductController::class);
+            Route::apiResource('/users', AdminUserController::class);
         });
     });
 });

@@ -99,7 +99,10 @@ class ApiResponse
                 'per_page' => $paginator->perPage(),
                 'total' => $paginator->total(),
                 'last_page' => $paginator->lastPage(),
+                'from' => $paginator->firstItem(),
+                'to' => $paginator->lastItem(),
             ],
+            'message' => 'Data retrieved successfully',
         ];
 
         return response()->json($response, 200);
