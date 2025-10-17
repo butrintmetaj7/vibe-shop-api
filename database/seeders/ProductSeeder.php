@@ -17,7 +17,7 @@ class ProductSeeder extends Seeder
     {
         try {
             // Fetch products from FakeStore API
-            $response = Http::get('https://fakestoreapi.com/products');
+            $response = Http::get(config('services.fakestore.url'));
 
             if ($response->failed()) {
                 Log::error('Failed to fetch products from FakeStore API', [

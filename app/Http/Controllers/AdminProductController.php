@@ -13,16 +13,11 @@ use Illuminate\Http\Request;
 class AdminProductController extends Controller
 {
     /**
-     * @var ProductQueryService
-     */
-    protected $queryService;
-
-    /**
      * Create a new controller instance.
      */
-    public function __construct(ProductQueryService $queryService)
-    {
-        $this->queryService = $queryService;
+    public function __construct(
+        protected ProductQueryService $queryService
+    ) {
     }
 
     /**

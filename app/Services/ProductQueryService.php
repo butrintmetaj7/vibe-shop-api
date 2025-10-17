@@ -47,7 +47,7 @@ class ProductQueryService
     public function getPaginated(Request $request)
     {
         $query = $this->buildQuery($request);
-        $perPage = max(1, min((int) $request->input('per_page', 15), 100));
+        $perPage = max(1, min($request->integer('per_page', 15), 100));
 
         return $query->paginate($perPage);
     }
@@ -61,20 +61,12 @@ class ProductQueryService
      */
     protected function applySorting(Builder $query, string $sort): void
     {
-        switch ($sort) {
-            case 'price_asc':
-                $query->orderBy('price', 'asc');
-                break;
-            case 'price_desc':
-                $query->orderBy('price', 'desc');
-                break;
-            case 'newest':
-                $query->orderBy('created_at', 'desc');
-                break;
-            default:
-                $query->orderBy('id', 'asc');
-                break;
-        }
+        match ($sort) {
+            'price_asc' => $query->orderBy('price', 'asc'),
+            'price_desc' => $query->orderBy('price', 'desc'),
+            'newest' => $query->orderBy('created_at', 'desc'),
+            default => $query->orderBy('id', 'asc'),
+        };
     }
 }
 
